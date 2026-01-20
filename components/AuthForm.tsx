@@ -29,6 +29,7 @@ const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const formSchema = authFormSchema(type);
 
@@ -75,8 +76,9 @@ const AuthForm = ({ type }: { type: string }) => {
 
         if (response) router.push("/");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (e: any) {
+      console.log(e);
+      setErrorMsg(e?.message || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -188,6 +190,8 @@ const AuthForm = ({ type }: { type: string }) => {
                 label="Password"
                 placeholder="Enter your password"
               />
+
+              {errorMsg && <p className="text-sm text-red-600">{errorMsg}</p>}
 
               <div className="flex flex-col gap-4">
                 <Button type="submit" disabled={isLoading} className="form-btn">
