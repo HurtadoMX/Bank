@@ -80,6 +80,8 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       type: "personal",
     });
 
+    console.log(dwollaCustomerUrl, "dwollaCustomerUrl");
+
     if (!dwollaCustomerUrl) throw new Error("Error creating Dwolla customer");
 
     const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
@@ -106,6 +108,8 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
     });
+
+    console.log(parseStringify(newUser), "dentro del action sale esto");
 
     return parseStringify(newUser);
   } catch (error: any) {

@@ -22,7 +22,7 @@ import CustomInput from "./CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getLoggedInUser, signIn, signUp } from "@/lib/actions/user.actions";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 import PlaidLink from "./PlaidLink";
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -46,6 +46,8 @@ const AuthForm = ({ type }: { type: string }) => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
 
+    console.log(data, "primero, si estoy entrando");
+
     try {
       // Sign up with Appwrite & create plaid token
 
@@ -63,21 +65,30 @@ const AuthForm = ({ type }: { type: string }) => {
           password: data.password,
         };
 
+        console.log(userData, "segundo");
+
         const newUser = await signUp(userData);
 
+        console.log(newUser, "tercero");
+
         setUser(newUser);
+
+        console.log("ahora si me mande, pero no sirvo");
       }
 
       if (type === "sign-in") {
+        console.log("estoy en sign in");
         const response = await signIn({
           email: data.email,
           password: data.password,
         });
 
+        console.log("al parecer si entre");
+
         if (response) router.push("/");
       }
     } catch (e: any) {
-      console.log(e);
+      console.log(e?.message);
       setErrorMsg(e?.message || "Something went wrong");
     } finally {
       setIsLoading(false);
@@ -117,14 +128,7 @@ const AuthForm = ({ type }: { type: string }) => {
       ) : (
         <>
           <Form {...form}>
-            <form
-              method="post"
-              onSubmit={(e) => {
-                e.preventDefault();
-                form.handleSubmit(onSubmit)();
-              }}
-              className="space-y-8"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               {type === "sign-up" && (
                 <>
                   <div className="flex gap-4">
