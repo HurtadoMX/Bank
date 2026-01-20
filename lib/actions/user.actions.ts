@@ -28,7 +28,7 @@ export const getUserInfo = async ({ userId }: getUserInfoProps) => {
     const user = await database.listDocuments(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
-      [Query.equal("userId", [userId])]
+      [Query.equal("userId", [userId])],
     );
 
     return parseStringify(user.documents[0]);
@@ -69,7 +69,7 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       ID.unique(),
       email,
       password,
-      `${firstName} ${lastName}`
+      `${firstName} ${lastName}`,
     );
 
     if (!newUserAccount) throw new Error("Error creating user");
@@ -92,7 +92,7 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
         userId: newUserAccount.$id,
         dwollaCustomerId,
         dwollaCustomerUrl,
-      }
+      },
     );
 
     const session = await account.createEmailPasswordSession(email, password);
@@ -143,7 +143,7 @@ export const createLinkToken = async (user: User) => {
         client_user_id: user.$id,
       },
       client_name: `${user.firstName} ${user.lastName}`,
-      products: ["auth"] as Products[],
+      products: ["auth", "transactions"] as Products[], // ✅ agrega transactions
       language: "en",
       country_codes: ["US"] as CountryCode[],
     };
@@ -178,7 +178,7 @@ export const createBankAccount = async ({
         accessToken,
         fundingSourceUrl,
         shareableId,
-      }
+      },
     );
 
     return parseStringify(bankAccount);
@@ -214,9 +214,8 @@ export const exchangePublicToken = async ({
       processor: "dwolla" as ProcessorTokenCreateRequestProcessorEnum,
     };
 
-    const processorTokenResponse = await plaidClient.processorTokenCreate(
-      request
-    );
+    const processorTokenResponse =
+      await plaidClient.processorTokenCreate(request);
     const processorToken = processorTokenResponse.data.processor_token;
 
     // Create a funding source URL for the account using the Dwolla customer ID, processor token, and bank name
@@ -258,7 +257,7 @@ export const getBanks = async ({ userId }: getBanksProps) => {
     const banks = await database.listDocuments(
       DATABASE_ID!,
       BANK_COLLECTION_ID!,
-      [Query.equal("userId", [userId])]
+      [Query.equal("userId", [userId])],
     );
 
     return parseStringify(banks.documents);
@@ -274,7 +273,7 @@ export const getBank = async ({ documentId }: getBankProps) => {
     const bank = await database.listDocuments(
       DATABASE_ID!,
       BANK_COLLECTION_ID!,
-      [Query.equal("$id", [documentId])]
+      [Query.equal("$id", [documentId])],
     );
 
     return parseStringify(bank.documents[0]);
@@ -292,7 +291,7 @@ export const getBankByAccountId = async ({
     const bank = await database.listDocuments(
       DATABASE_ID!,
       BANK_COLLECTION_ID!,
-      [Query.equal("accountId", [accountId])]
+      [Query.equal("accountId", [accountId])],
     );
 
     if (bank.total !== 1) return null;

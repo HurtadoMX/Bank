@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BankTabItem } from "./BankTabItem";
+import BankInfo from "./BankInfo";
+import TransactionsTable from "./TransactionsTable";
 // import { BankTabItem } from "./BankTabItem";
 // import BankInfo from "./BankInfo";
 // import TransactionsTable from "./TransactionsTable";
@@ -38,11 +41,11 @@ const RecentTransactions = ({
         <TabsList className="recent-transactions-tablist">
           {accounts.map((account: Account) => (
             <TabsTrigger key={account.id} value={account.appwriteItemId}>
-              {/* <BankTabItem
+              <BankTabItem
                 key={account.id}
                 account={account}
                 appwriteItemId={appwriteItemId}
-              /> */}
+              />
             </TabsTrigger>
           ))}
         </TabsList>
@@ -53,13 +56,13 @@ const RecentTransactions = ({
             key={account.id}
             className="space-y-4"
           >
-            {/* <BankInfo
+            <BankInfo
               account={account}
               appwriteItemId={appwriteItemId}
               type="full"
-            /> */}
+            />
 
-            {/* <TransactionsTable transactions={currentTransactions} /> */}
+            <TransactionsTable transactions={currentTransactions} />
 
             {totalPages > 1 && (
               <div className="my-4 w-full">
