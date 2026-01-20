@@ -8,16 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import CustomInput from "./CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
@@ -95,6 +86,7 @@ const AuthForm = ({ type }: { type: string }) => {
     }
   };
 
+  console.log("AuthForm mounted ✅");
   return (
     <section className="auth-form">
       <header className="flex flex-col gap-5 md:gap-8">
@@ -128,7 +120,12 @@ const AuthForm = ({ type }: { type: string }) => {
       ) : (
         <>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              method="post"
+              action="#"
+              className="space-y-8"
+            >
               {type === "sign-up" && (
                 <>
                   <div className="flex gap-4">
@@ -217,6 +214,9 @@ const AuthForm = ({ type }: { type: string }) => {
                     "Sign Up"
                   )}
                 </Button>
+                <button type="button" onClick={() => alert("JS OK ✅")}>
+                  Test JS
+                </button>
               </div>
             </form>
           </Form>
