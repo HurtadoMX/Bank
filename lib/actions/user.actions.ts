@@ -116,6 +116,8 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
 export async function getLoggedInUser() {
   try {
+    const sessionCookie = cookies().get("appwrite-session")?.value;
+    console.log("appwrite-session cookie exists?", !!sessionCookie);
     const { account } = await createSessionClient();
     const result = await account.get();
 
@@ -123,7 +125,7 @@ export async function getLoggedInUser() {
 
     return parseStringify(user);
   } catch (error) {
-    console.log(error);
+    console.log("getLoggedInUser error:", error);
     return null;
   }
 }
