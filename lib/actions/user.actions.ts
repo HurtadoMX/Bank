@@ -45,34 +45,35 @@ export const signIn = async ({ email, password }: signInProps) => {
     cookies().set("appwrite-session", session.secret, {
       path: "/",
       httpOnly: true,
-      sameSite: "strict",
-      secure: true,
+      sameSite: "lax", // 👈 en prod suele ser más friendly que strict
+      secure: process.env.NODE_ENV === "production",
     });
 
     const user = await getUserInfo({ userId: session.userId });
+    if (!user) throw new Error("User document not found after sign-in");
 
     return parseStringify(user);
-  } catch (error) {
-    console.error("Error", error);
+  } catch (error: any) {
+    console.error("signIn failed:", error);
+    throw new Error(error?.message || "signIn failed");
   }
 };
 
 export const signUp = async ({ password, ...userData }: SignUpParams) => {
   const { email, firstName, lastName } = userData;
 
-  let newUserAccount;
-
   try {
     const { account, database } = await createAdminClient();
 
-    newUserAccount = await account.create(
+    const newUserAccount = await account.create(
       ID.unique(),
       email,
       password,
       `${firstName} ${lastName}`,
     );
 
-    if (!newUserAccount) throw new Error("Error creating user");
+    if (!newUserAccount?.$id)
+      throw new Error("Error creating Appwrite account");
 
     const dwollaCustomerUrl = await createDwollaCustomer({
       ...userData,
@@ -95,18 +96,21 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       },
     );
 
+    if (!newUser?.$id) throw new Error("Error creating user document");
+
     const session = await account.createEmailPasswordSession(email, password);
 
     cookies().set("appwrite-session", session.secret, {
       path: "/",
       httpOnly: true,
-      sameSite: "strict",
-      secure: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
     });
 
     return parseStringify(newUser);
-  } catch (error) {
-    console.error("Error", error);
+  } catch (error: any) {
+    console.error("signUp failed:", error);
+    throw new Error(error?.message || "signUp failed");
   }
 };
 
