@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Serif } from "next/font/google";
 import "./globals.css";
+import FooterExtra from "@/components/FooterExtra";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const ibmPlexSerif = IBM_Plex_Serif({
@@ -24,9 +25,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${ibmPlexSerif.variable} antialiased`}
+        className={`${inter.variable} ${ibmPlexSerif.variable} antialiased h-screen flex flex-col overflow-hidden`}
       >
-        {children}
+        {/* contenido */}
+        <main className="flex-1 min-h-0 overflow-auto pb-14">{children}</main>
+
+        {/* footer */}
+        <div className="shrink-0">
+          <FooterExtra />
+        </div>
       </body>
     </html>
   );
